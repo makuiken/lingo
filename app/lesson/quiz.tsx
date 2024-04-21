@@ -12,7 +12,7 @@ import { reduceHearts } from "@/actions/user-progress";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
-import { challengeOptions, challenges } from "@/db/schema";
+import { challengeOptions, challenges, userSubscription } from "@/db/schema";
 
 import { QuestionBubble } from "./question-bubble";
 import { Header } from "./header";
@@ -28,7 +28,9 @@ type Props = {
     completed: boolean;
     challengeOptions: (typeof challengeOptions.$inferSelect)[];
   })[];
-  userSubscription: any;
+  userSubscription: typeof userSubscription.$inferSelect & {
+    isActive: boolean;
+  } | null; 
 };
 
 export const Quiz = ({
