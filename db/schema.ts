@@ -1,5 +1,13 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgEnum, pgTable, serial, text } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const courses = pgTable("courses", {
   id: serial("id").primaryKey(),
@@ -79,12 +87,15 @@ export const challengeOptions = pgTable("challenge_options", {
   audioSrc: text("audio_src"),
 });
 
-export const challengeOptionsRelations = relations(challengeOptions, ({ one }) => ({
-  challenge: one(challenges, {
-    fields: [challengeOptions.challengeId],
-    references: [challenges.id],
-  }),
-}));
+export const challengeOptionsRelations = relations(
+  challengeOptions,
+  ({ one }) => ({
+    challenge: one(challenges, {
+      fields: [challengeOptions.challengeId],
+      references: [challenges.id],
+    }),
+  })
+);
 
 export const challengeProgress = pgTable("challenge_progress", {
   id: serial("id").primaryKey(),
@@ -95,12 +106,15 @@ export const challengeProgress = pgTable("challenge_progress", {
   completed: boolean("completed").notNull().default(false),
 });
 
-export const challengeProgressRelations = relations(challengeProgress, ({ one }) => ({
-  challenge: one(challenges, {
-    fields: [challengeProgress.challengeId],
-    references: [challenges.id],
-  }),
-}));
+export const challengeProgressRelations = relations(
+  challengeProgress,
+  ({ one }) => ({
+    challenge: one(challenges, {
+      fields: [challengeProgress.challengeId],
+      references: [challenges.id],
+    }),
+  })
+);
 
 export const userProgress = pgTable("user_progress", {
   userId: text("user_id").primaryKey(),
@@ -119,3 +133,12 @@ export const userProgressRelations = relations(userProgress, ({ one }) => ({
     references: [courses.id],
   }),
 }));
+
+export const userSubscription = pgTable("user_subscription", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull().unique(),
+  stripeCustomerId: text("stripe_customer_id").notNull().unique(),
+  stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+  stripePriceId: text("stripe_price_id").notNull(),
+  stripeCurrentPeriodEnd: timestamp("stripe_current_period_end").notNull(),
+});
